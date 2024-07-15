@@ -33,7 +33,7 @@ export const updateBook = createAsyncThunk("books/updateBook", async ({ id, upda
 
 export const deleteBook = createAsyncThunk("books/deleteBook", async (id, { rejectWithValue }) => {
   try {
-    await axios.delete("/books/" + id);
+    await axios.delete(`/books/${id}`);
     return id;
   } catch (error) {
     console.error("Error deleting book:", error.response ? error.response.data : error.message);

@@ -26,7 +26,6 @@ const booksSlice = createSlice({
       })
       .addCase(addBook.fulfilled, (state, action) => {
         state.books.push(action.payload);
-        console.log(action.payload, "qaqaqaq");
       })
       .addCase(updateBook.fulfilled, (state, action) => {
         const index = state.books.findIndex((book) => book.id === action.payload.id);

@@ -9,8 +9,6 @@ import { FormControl } from "@mui/base/FormControl";
 import { Input, inputClasses } from "@mui/base/Input";
 import { styled } from "@mui/system";
 import { Fragment, useEffect, useState } from "react";
-// import { BorderAllRounded } from "@mui/icons-material";
-// import { Button } from "antd";
 
 const style = {
   position: "absolute",
@@ -87,7 +85,7 @@ const grey = {
   900: "#1C2025",
 };
 
-export default function TransitionsModal({ open, handleClose, onAddBook, book, onEditBook }) {
+export default function TransitionsModal({ open, setOpen, title, handleClose, onAddBook, book, onEditBook }) {
   const [formData, setFormData] = useState({
     isbn: "",
     title: "",
@@ -103,21 +101,40 @@ export default function TransitionsModal({ open, handleClose, onAddBook, book, o
     }
   }, [book]);
 
+  const [isValid, setIsValid] = useState({
+    isbn: false,
+    title: false,
+    author: false,
+    cover: false,
+    pages: false,
+    published: false,
+  });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
+    setIsValid((prevState) => ({
+      ...prevState,
+      [name]: value.trim() !== "",
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const allValid = Object.values(isValid).every(Boolean);
+    if (!allValid) {
+      alert("Please fill out all fields.");
+      return;
+    }
     if (book) {
       onEditBook(formData);
     } else {
       onAddBook(formData);
     }
+    setOpen(false);
   };
 
   return (
@@ -128,114 +145,102 @@ export default function TransitionsModal({ open, handleClose, onAddBook, book, o
         open={open}
         onClose={handleClose}
         closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            timeout: 500,
-          },
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
         }}
       >
         <Fade in={open}>
           <Box sx={style}>
-            Author:
-            <FormControl required>
-              {({ filled, focused }) => (
+            <form onSubmit={handleSubmit}>
+              <FormControl required>
+                <label htmlFor="author">Author:</label>
                 <Fragment>
                   <StyledInput
                     value={formData.author}
                     onChange={handleChange}
-                    name="title"
+                    name="author"
                     type="text"
-                    placeholder="book title"
-                    className={filled ? "filled" : ""}
+                    placeholder="Author"
+                    className={isValid.author ? "filled" : ""}
                   />
-                  {filled && !focused && <OkMark>✔</OkMark>}
+                  {isValid.author && <OkMark>✔</OkMark>}
                 </Fragment>
-              )}
-            </FormControl>
-            Title:
-            <FormControl required>
-              {({ filled, focused }) => (
+              </FormControl>
+              <FormControl required>
+                <label htmlFor="title">Title:</label>
                 <Fragment>
                   <StyledInput
                     value={formData.title}
                     onChange={handleChange}
                     name="title"
                     type="text"
-                    placeholder="book title"
-                    className={filled ? "filled" : ""}
+                    placeholder="Title"
+                    className={isValid.title ? "filled" : ""}
                   />
-                  {filled && !focused && <OkMark>✔</OkMark>}
+                  {isValid.title && <OkMark>✔</OkMark>}
                 </Fragment>
-              )}
-            </FormControl>
-            Cover:
-            <FormControl required>
-              {({ filled, focused }) => (
+              </FormControl>
+              <FormControl required>
+                <label htmlFor="cover">Cover:</label>
                 <Fragment>
                   <StyledInput
+                    value={formData.cover}
                     onChange={handleChange}
                     name="cover"
-                    value={formData.cover}
                     type="text"
-                    placeholder="url"
-                    className={filled ? "filled" : ""}
+                    placeholder="Cover URL"
+                    className={isValid.cover ? "filled" : ""}
                   />
-                  {filled && !focused && <OkMark>✔</OkMark>}
+                  {isValid.cover && <OkMark>✔</OkMark>}
                 </Fragment>
-              )}
-            </FormControl>
-            Pages:
-            <FormControl required>
-              {({ filled, focused }) => (
+              </FormControl>
+              <FormControl required>
+                <label htmlFor="pages">Pages:</label>
                 <Fragment>
                   <StyledInput
+                    value={formData.pages}
                     onChange={handleChange}
                     name="pages"
-                    value={formData.pages}
                     type="number"
-                    placeholder="pages"
-                    className={filled ? "filled" : ""}
+                    placeholder="Pages"
+                    className={isValid.pages ? "filled" : ""}
                   />
-                  {filled && !focused && <OkMark>✔</OkMark>}
+                  {isValid.pages && <OkMark>✔</OkMark>}
                 </Fragment>
-              )}
-            </FormControl>
-            Published:
-            <FormControl required>
-              {({ filled, focused }) => (
+              </FormControl>
+              <FormControl required>
+                <label htmlFor="published">Published:</label>
                 <Fragment>
                   <StyledInput
+                    value={formData.published}
                     onChange={handleChange}
                     name="published"
-                    value={formData.published}
-                    type="number"
-                    placeholder="published"
-                    className={filled ? "filled" : ""}
+                    type="text"
+                    placeholder="Published"
+                    className={isValid.published ? "filled" : ""}
                   />
-                  {filled && !focused && <OkMark>✔</OkMark>}
+                  {isValid.published && <OkMark>✔</OkMark>}
                 </Fragment>
-              )}
-            </FormControl>
-            Isbn:
-            <FormControl required>
-              {({ filled, focused }) => (
+              </FormControl>
+              <FormControl required>
+                <label htmlFor="isbn">ISBN:</label>
                 <Fragment>
                   <StyledInput
                     value={formData.isbn}
                     onChange={handleChange}
                     name="isbn"
-                    type="number"
+                    type="text"
                     placeholder="ISBN"
-                    className={filled ? "filled" : ""}
+                    className={isValid.isbn ? "filled" : ""}
                   />
-                  {filled && !focused && <OkMark>✔</OkMark>}
+                  {isValid.isbn && <OkMark>✔</OkMark>}
                 </Fragment>
-              )}
-            </FormControl>
-            <Button onClick={handleSubmit} className="rounded-lg">
-              {book ? "Update Book" : "Add Book"}
-            </Button>
+              </FormControl>
+              <Button variant="contained" type="submit" style={{ marginTop: "20px", width: "100%" }}>
+                {title === "Add" ? "Add Book" : "Update Book"}
+              </Button>
+            </form>
           </Box>
         </Fade>
       </Modal>
@@ -244,16 +249,11 @@ export default function TransitionsModal({ open, handleClose, onAddBook, book, o
 }
 
 TransitionsModal.propTypes = {
-  book: PropTypes.shape({
-    isbn: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    cover: PropTypes.string.isRequired,
-    author: PropTypes.string.isRequired,
-    published: PropTypes.number.isRequired,
-    pages: PropTypes.number.isRequired,
-  }),
   open: PropTypes.bool.isRequired,
+  setOpen: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
   handleClose: PropTypes.func.isRequired,
   onAddBook: PropTypes.func.isRequired,
+  book: PropTypes.object,
   onEditBook: PropTypes.func.isRequired,
 };

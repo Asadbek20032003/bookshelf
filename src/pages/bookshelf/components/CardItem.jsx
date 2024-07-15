@@ -2,6 +2,7 @@ import trash from "../../../assets/images/trash.svg";
 import edit from "../../../assets/images/edit.svg";
 import { deleteBook } from "../../../store/books/books.thunk";
 import { useDispatch } from "react-redux";
+import PropTypes from "prop-types";
 
 const CardItem = ({ book, onEdit }) => {
   const dispatch = useDispatch();
@@ -11,6 +12,7 @@ const CardItem = ({ book, onEdit }) => {
   };
 
   const handleEdit = () => {
+    console.log(book, "edit");
     onEdit(book);
   };
   return (
@@ -53,6 +55,13 @@ const CardItem = ({ book, onEdit }) => {
 export default CardItem;
 
 CardItem.propTypes = {
-  book: Function,
-  onEdit: Function,
+  book: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    cover: PropTypes.string.isRequired,
+    pages: PropTypes.number.isRequired,
+    published: PropTypes.number.isRequired,
+    isbn: PropTypes.string.isRequired,
+  }).isRequired,
+  onEdit: PropTypes.func.isRequired,
 };

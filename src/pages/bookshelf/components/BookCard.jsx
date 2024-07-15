@@ -7,13 +7,17 @@ import edit from "../../../assets/images/edit.svg";
 import { useDispatch, useSelector } from "react-redux";
 // import { deleted } from "../../../store/books/books.slice";
 import { deleteBook } from "../../../store/books/books.thunk";
-const BookCard = ({ onEdit }) => {
+const BookCard = ({ book, onEdit }) => {
   const books = useSelector((state) => state.books.books);
-  console.log(books.data, "bookscard");
+  // console.log(books.data, "bookscard");
   const dispatch = useDispatch();
 
   const handleDelete = (id) => {
     dispatch(deleteBook(id));
+  };
+
+  const handleEdit = () => {
+    onEdit(book);
   };
 
   return (
@@ -72,13 +76,13 @@ const BookCard = ({ onEdit }) => {
             </div>
             <div className="absolute flex flex-col items-center justify-start -right-8 top-[16px]">
               <div
-                onClick={handleDelete(book.data.id)}
+                onClick={handleDelete}
                 className="bg-[#FF4D4F] p-[8px] mb-[2px] rounded-tl-[6px] rounded-tr-[6px] rounded-br-[6px] rounded-bl-0"
               >
                 <img src={trash} alt="trash" />
               </div>
               <div
-                onClick={() => onEdit(book.data)}
+                onClick={handleEdit}
                 className="bg-[#6200EE] p-[8px] rounded-tl-0 rounded-tr-[6px] rounded-br-[6px] rounded-bl-[6px]"
               >
                 <img src={edit} alt="edit" />

@@ -12,11 +12,15 @@ const Bookshelf = () => {
   const dispatch = useDispatch();
   const books = useSelector((state) => state.books.books);
   const [currentBook, setCurrentBook] = useState(null);
+  const [title, setTitle] = useState("");
   const [open, setOpen] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    setOpen(true);
+    setTitle("Add");
+  };
   const handleClose = () => {
     setOpen(false);
     setCurrentBook(null);
@@ -32,15 +36,15 @@ const Bookshelf = () => {
       .then(() => {
         setAlertMessage("Book added successfully!");
         setAlertVisible(true);
-        setTimeout(() => setAlertVisible(false), 3000); // Alertni 3 sekunddan keyin yashirish
+        setTimeout(() => setAlertVisible(false), 3000);
       });
-
-    setOpen(false);
+    setTitle("Add");
   };
 
   const handleEditBook = (book) => {
     setCurrentBook(book);
     setOpen(true);
+    setTitle("Update");
   };
 
   const handleUpdateBook = async (updatedBook, id) => {
@@ -49,10 +53,9 @@ const Bookshelf = () => {
       .then(() => {
         setAlertMessage("Book updated successfully!");
         setAlertVisible(true);
-        setTimeout(() => setAlertVisible(false), 3000); // Alertni 3 sekunddan keyin yashirish
+        setTimeout(() => setAlertVisible(false), 3000);
       });
-
-    setOpen(false);
+    setTitle("Add");
   };
 
   return (
@@ -87,6 +90,9 @@ const Bookshelf = () => {
         handleOpen={handleOpen}
         handleClose={handleClose}
         open={open}
+        setOpen={setOpen}
+        title={title}
+        setTitle={setTitle}
         onAddBook={handleAddBook}
         onEditBook={handleUpdateBook}
         book={currentBook}
